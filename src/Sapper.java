@@ -17,7 +17,14 @@ public class Sapper extends JFrame {
 
 // Метод по инициализации панели (JPanel)
     private void initPanel() {
-        panel = new JPanel();
+        panel = new JPanel()
+        {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+
+            }
+        };
         panel.setPreferredSize(new Dimension(500,300)); //  установка размера панели с использование менеджера компановки
         add(panel);
     }
