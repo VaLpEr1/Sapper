@@ -6,9 +6,11 @@ import sapper.Box;
 public class Sapper extends JFrame {
 
     private JPanel panel;
-    private final byte imageSize = 50; // переменая размера картинки
-    private final byte rows = 1; // переменая кол-во строк
-    private final byte cols = 15; // переменая кол-во столбцов
+    private final int imageSize = 50; // переменая размера картинки
+    private final int rows = 9; // переменая кол-во строк
+    private final int cols = 9; // переменая кол-во столбцов
+    private final int bombs = 10; // кол-во бомб
+    private Game game; // Экзепляр класса
 
     public static void main(String[] args) {
         new Sapper();
@@ -16,6 +18,10 @@ public class Sapper extends JFrame {
 
 // Конструктор основного класса Sapper где создаеться основной GUI
     private Sapper(){
+
+        game = new Game(cols, rows, bombs);
+        game.start();
+        setImages();
         initPanel();
         initFrame();
     }
@@ -28,13 +34,14 @@ public class Sapper extends JFrame {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                for (Box box : Box.values()){ // циклом идет перечисление картинок указаный в Enum
-                g.drawImage(getImage(box.name()),
-                        box.ordinal() * imageSize, 0, this);}
+                for (Coord coord : Ranges.getAllCoords()){ // циклом идет перечисление картинок указаный в Enum
+                    g.drawImage((Image) game.getBox(coord).image,
+                            coord.x * imageSize,
+                            coord.y * imageSize, this);}
             }
         };
-        panel.setPreferredSize(new Dimension(cols * imageSize,
-                                             rows * imageSize)); //  установка размера панели(использование менеджера компановки). Размер зависит от кол-ва картинок в столбце и строчке
+        panel.setPreferredSize(new Dimension(Ranges.getSize().x * imageSize,
+                                             Ranges.getSize().y * imageSize)); //  установка размера панели(использование менеджера компановки). Размер зависит от кол-ва картинок в столбце и строчке
         add(panel);
     }
 
@@ -42,15 +49,22 @@ public class Sapper extends JFrame {
     private void initFrame() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("Сапер");
-        setVisible(true);
         setResizable(false);
         pack();
+        setVisible(true);
         setLocationRelativeTo(null);
+    }
+
+    private void setImages(){
+        for (Box box : Box.values())
+            box.image = getImage(box.name());
+        setIconImage(getImage("icon"));
     }
 
 // Метод добавления картинки
     private Image getImage(String nameImage){
-        ImageIcon icon = new ImageIcon("res/img/"+ nameImage + ".png");
+        String filename = "img/"+ nameImage + ".png";
+        ImageIcon icon = new ImageIcon(getClass().getResource(filename));
         return icon.getImage();
     }
 }

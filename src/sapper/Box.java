@@ -1,5 +1,7 @@
 package sapper;
 
+import java.awt.*;
+
 public enum Box {
 // Скрытые
     zero,
@@ -20,4 +22,11 @@ public enum Box {
     flaged,
     bombed,
     nobomb;
+
+    public Object image;
+
+// Метод возвращающий следующию цифру
+    Box nextNumberBox(){
+        return Box.values()[this.ordinal() +1];
+    }
 }
